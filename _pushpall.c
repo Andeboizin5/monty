@@ -1,40 +1,47 @@
 #include "monty.h"
-/**
- * f_div - divides the top two elements of the stack.
- * @head: stack head
- * @counter: line_number
- * Return: no return
-*/
-void f_div(stack_t **head, unsigned int counter)
-{
-	stack_t *h;
-	int len = 0, aux;
+#include <stdlib.h>
 
-	h = *head;
-	while (h)
+/*
+ * push - function to push
+ * @stack: input
+ * @value: input
+ * Return: Always 0
+ */
+void push(stack_t **stack, int value)
+{
+	stack_t *new_node = malloc(sizeof(stack_t));
+
+	if (!new_node)
 	{
-		h = h->next;
-		len++;
-	}
-	if (len < 2)
-	{
-		fprintf(stderr, "L%d: can't div, stack too short\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
+		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
-	h = *head;
-	if (h->n == 0)
+
+	new_node->n = value;
+	new_node->prev = NULL;
+
+	if (*stack)
 	{
-		fprintf(stderr, "L%d: division by zero\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE);
+		new_node->next = *stack;
+		(*stack)->prev = new_node;
+	} else
+	{
+		new_node->next = NULL;
 	}
-	aux = h->next->n / h->n;
-	h->next->n = aux;
-	*head = h->next;
-	free(h);
+
+	*stack = new_node;
+}
+
+/*
+ * pall - pall function
+ * @stack: input
+ * Return: Always 0
+ */
+void pall(stack_t *stack)
+{
+	while (stack)
+	{
+		printf("%d\n", stack->n);
+		stack = stack->next;
+	}
 }
