@@ -2,46 +2,59 @@
 #include <stdlib.h>
 
 /*
- * push - function to push
- * @stack: input
- * @value: input
+ * _push - add node to the stack
+ * @head: input
+ * @counter: input
  * Return: Always 0
  */
-void push(stack_t **stack, int value)
+void _push(stack_t **head, unsigned int counter)
 {
-	stack_t *new_node = malloc(sizeof(stack_t));
+	int n, j = 0, flag = 0;
 
-	if (!new_node)
+	if (bus.arg)
 	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
-
-	new_node->n = value;
-	new_node->prev = NULL;
-
-	if (*stack)
-	{
-		new_node->next = *stack;
-		(*stack)->prev = new_node;
-	} else
-	{
-		new_node->next = NULL;
-	}
-
-	*stack = new_node;
+		if (bus.arg[0] == '-')
+			j++;
+		for (; bus.arg[j] != '\0'; j++)
+		{
+			if (bus.arg[j] > 57 || bus.arg[j] < 48)
+				flag = 1; }
+		if (flag == 1)
+		{ fprintf(stderr, "L%d: usage: push integer\n", counter);
+			fclose(bus.file);
+			free(bus.content);
+			free_stack(*head);
+			exit(EXIT_FAILURE); }}
+	else
+	{ fprintf(stderr, "L%d: usage: push integer\n", counter);
+		fclose(bus.file);
+		free(bus.content);
+		free_stack(*head);
+		exit(EXIT_FAILURE); }
+	n = atoi(bus.arg);
+	if (bus.lifi == 0)
+		addnode(head, n);
+	else
+		addqueue(head, n);
 }
 
-/*
- * pall - pall function
- * @stack: input
+/**
+ * _pall - prints the stack
+ * @head: input
+ * @count: input
  * Return: Always 0
- */
-void pall(stack_t *stack)
+*/
+void _pall(stack_t **head, unsigned int count)
 {
-	while (stack)
+	stack_t *h;
+	(void)count;
+
+	h = *head;
+	if (h == NULL)
+		return;
+	while (h)
 	{
-		printf("%d\n", stack->n);
-		stack = stack->next;
+		printf("%d\n", h->n);
+		h = h->next;
 	}
 }
